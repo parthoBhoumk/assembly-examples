@@ -160,6 +160,7 @@ STR2 DB 7DUP(0)
 
 ###################### REVERSE EACH WORD IN A STRING ######################
 
+
 ; You may customize this and other start-up templates; 
 ; The location of this template is c:\emu8086\inc\0_com_template.txt
 
@@ -198,11 +199,18 @@ CODE SEGMENT
        JMP L1
        
     EXIT:
+    
+    LEA SI,STR3+1
+    LEA DI,STR3
+    CLD
+    MOV CX,L
+    REPE MOVSB
     HLT
        
     
 
 
-STR1 DB 'AN ANT IS $' 
+STR1 DB 'THIS IS A TEST $' 
 STR2 DB 'DUPLICATE STRING HERE'
-STR3 DB 'REVERSE STRING HERE'
+STR3 DB 'REVERSE STRING HERE GOES'
+L DW 14
