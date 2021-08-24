@@ -158,3 +158,51 @@ STR1 DB 'REVIVER'
 STR2 DB 7DUP(0)                       
                        
 
+###################### REVERSE EACH WORD IN A STRING ######################
+
+; You may customize this and other start-up templates; 
+; The location of this template is c:\emu8086\inc\0_com_template.txt
+
+ASSUME CS:CODE,DS:DATA
+
+CODE SEGMENT
+    XOR CX,CX
+    LEA BP,STR3
+    LEA SI,STR1
+    LEA DI,STR2
+    CLD
+    L1:
+       MOVSB
+       INC CX
+       CMP [DI-1],' '
+       JE REVERSE
+       CMP [DI-1],'$' 
+       JZ EXIT
+       JMP L1
+       
+    REVERSE:
+       PUSH SI
+       MOV SI,DI
+       SUB SI,1
+       MOV DI,BP
+       STD
+       MOVE:
+         MOVSB 
+         ADD DI,2  
+         MOV BP,DI
+         LOOP MOVE
+       POP SI     
+       LEA DI,STR2
+       XOR CX,CX 
+       CLD
+       JMP L1
+       
+    EXIT:
+    HLT
+       
+    
+
+
+STR1 DB 'AN ANT IS $' 
+STR2 DB 'DUPLICATE STRING HERE'
+STR3 DB 'REVERSE STRING HERE'
