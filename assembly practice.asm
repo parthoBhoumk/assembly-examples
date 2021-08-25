@@ -214,3 +214,145 @@ STR1 DB 'THIS IS A TEST $'
 STR2 DB 'DUPLICATE STRING HERE'
 STR3 DB 'REVERSE STRING HERE GOES'
 L DW 14
+
+
+################################## CHECKING DIAGONAL OR NOT FOR SQUARE MATRIX #########################
+CODE SEGMENT
+ASSUME CS:CODE,DS:CODE  
+
+MOV AX,DIM     
+MUL DIM
+MOV ELEMENT,AX
+DEC AX  
+ADD AX,AX
+MOV COUNT,AX 
+MOV BX,COUNT 
+
+MOV CX,ELEMENT
+INC CX           
+
+MOV DX,DIM
+ADD DX,1
+ADD DX,DX
+MOV VAR,DX 
+
+CHECKING:
+DEC CX ;just to get out of the loop
+JZ NEXT
+MOV AX,W[BX]
+PUSH AX
+SHR AX,15 ;checking the MSB for negative inputs
+AND AX,1
+JNZ CHANGE ;changing to positive numbers
+SUB BX,2
+JMP CHECKING
+CHANGE:
+POP AX
+NOT AX
+ADD AX,1
+MOV W[BX],AX
+SUB BX,2
+JMP CHECKING
+
+NEXT:
+  MOV BX,COUNT
+  MOV SI,0H 
+  
+  MOV CX,DIM
+  L1:
+   MOV AX,W[BX] 
+   MOV B[SI],AX
+   MOV W[BX],0H 
+   SUB BX,VAR
+   ADD SI,2
+   LOOP L1
+   
+   MOV BX,COUNT
+   MOV SI,0H   
+   
+   FINDSUM:
+   MOV CX,DIM
+   DEC CX
+   
+   MOV AX,W[BX]
+   L2:
+   ADD AX,W[BX-2]
+   SUB BX,2
+   LOOP L2
+     
+   MOV C[SI],AX 
+   ADD SI,2     
+   CMP BX,0 
+   JZ LASTCHECK 
+   SUB BX,2
+   JMP FINDSUM
+   
+   LASTCHECK:
+   
+        XOR SI,SI
+        XOR DI,DI
+        
+        MOV CX,DIM
+        L3:    
+          MOV AX,B[SI]
+          CMP AX,C[SI]
+          JL NOT_DIA
+          ADD SI,2
+          LOOP L3
+        
+        MOV AX,1
+        HLT 
+   NOT_DIA:
+     XOR AX,AX
+     HLT  
+
+W DW 6,4,0
+DW 1,-5,2
+DW 1,-5,8  
+
+B DW 0,0,0     ;ADD DIMENSION NUMBERS OF ZEROS 
+C DW 0,0,0
+  
+COUNT DW ?
+ELEMENT DW ? 
+VAR DW ?
+
+DIM DW 3 ;dimension
+
+END
+
+#########################CHECKING IF A PRIME NUMBER#############################
+CODE SEGMENT
+    ASSUME CS:CODE,DS:DATA
+    
+    MOV AX,NUMBER
+    PUSH AX
+    XOR DX,DX
+    MOV BX,2
+    DIV BX
+    MOV CX,AX
+    
+    POP AX
+    
+    CHECK:    
+      CMP CX,1
+      JE PRIME 
+      PUSH AX
+      XOR DX,DX
+      MOV BX,CX
+      DIV BX
+      CMP DX,0
+      JE NOTPRIME
+      
+      POP AX
+      LOOP CHECK
+      
+    NOTPRIME:
+     MOV CX,0
+     HLT
+    PRIME:
+    MOV CX,1
+    HLT
+    
+  
+NUMBER DW 17
