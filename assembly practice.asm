@@ -356,3 +356,83 @@ CODE SEGMENT
     
   
 NUMBER DW 17
+
+
+############################ SUM OF NTH FIBONACCI NUMBERS ###########################################
+CODE SEGMENT
+    ASSUME CS:CODE, DS:CODE      
+    MOV CX,COUNT 
+    SUB CX,2
+    
+    XOR AX,AX
+    XOR SI,SI
+    
+    CALL MY_FIBONACCI
+    
+    MY_FIBONACCI PROC      
+        
+        MOV AX,FIB_NUMBERS[SI]
+        ADD AX,FIB_NUMBERS[SI+2]
+        MOV FIB_NUMBERS[SI+4],AX
+        ADD SI,2
+        DEC CX
+        JZ NEXT
+        CALL MY_FIBONACCI
+         
+    MY_FIBONACCI ENDP
+    
+    NEXT:
+    MOV CX,COUNT 
+    XOR SI,SI
+    
+    
+    SUMM:              
+      MOV AX,FIB_NUMBERS[SI]
+      ADD SUM,AX
+      ADD SI,2
+      LOOP SUMM
+HLT
+    
+    
+
+    
+CODE ENDS
+
+SUM DW 0 
+COUNT DW 12   ;N = 12
+FIB_NUMBERS DW 0,1,10 DUP(0)   
+END
+
+
+#################### REPEATATION OF A SUBSTRING IN A MAIN STRING ##########################
+
+CODE SEGMENT
+    ASSUME CS:CODE,DS:DATA
+    
+    XOR DX,DX
+  
+    LEA DI,STR2             
+    MOV BX,15D
+    CLD
+    AGAIN:  
+    DEC BX     
+    CMP [DI],'$'
+    JE EXIT
+    MOV CX,4
+    LEA SI,STR1
+    
+    REP CMPSB 
+    CMP CX,0H
+    JE MATCHED
+    JMP AGAIN
+    
+    MATCHED:
+    INC DX
+    JMP AGAIN 
+    
+    EXIT:
+    HLT
+ 
+    
+    STR1 DB 'eee'
+    STR2 DB 'dfeeehgeeehjoee $'
