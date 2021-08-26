@@ -436,3 +436,38 @@ CODE SEGMENT
     
     STR1 DB 'eee'
     STR2 DB 'dfeeehgeeehjoee $'
+
+
+
+testinggggggggggggggggggggggggggggggggggggggggggggg
+CODE SEGMENT 
+    ASSUME CS:CODE,DS:DATA
+    
+  MOV CL,POINT
+  MOV BL,LENGTH1
+  LEA DI,STR1+4
+  LEA SI,STR1+3
+  CLD        
+  
+  MOV AL,LENGTH1
+  SUB AL,POINT 
+  MOV DX,AL
+  
+  REPEAT:
+  
+     MOVSB
+     ADD DI,2 
+     DEC BL
+     JZ NEXT
+     JMP REPEAT 
+  NEXT:
+     HLT
+  
+  
+               
+  LENGTH2 DB 3 
+  LENGTH1 DB 4
+  POINT DB 1
+  STR2 DB 'ROG'
+  STR1 DB 'PGAM'
+  
