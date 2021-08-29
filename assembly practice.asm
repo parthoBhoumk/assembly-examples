@@ -439,35 +439,54 @@ CODE SEGMENT
 
 
 
-testinggggggggggggggggggggggggggggggggggggggggggggg
+#################### CASCADING TWO STRING IN A PARTICULAR POSITION ######################################
 CODE SEGMENT 
     ASSUME CS:CODE,DS:DATA
     
-  MOV CL,POINT
-  MOV BL,LENGTH1
-  LEA DI,STR1+4
-  LEA SI,STR1+3
-  CLD        
+  MOV CX,1
+  PUSH CX
+
+  MOV CL,LENGTH1
+  LEA SI,STR1
+  L2:
+    INC SI
+    LOOP L2    
+            
+  XOR AX,AX
+  MOV AL,LENGTH2
+  MOV DI,SI
+  ADD DI,AX  
   
+  POP CX   
+  PUSH CX
+  XOR AX,AX
   MOV AL,LENGTH1
-  SUB AL,POINT 
-  MOV DX,AL
+  SUB AX,CX 
+  MOV CL,AL
+  INC CL 
   
-  REPEAT:
+  STD     
+  REPE MOVSB  
   
-     MOVSB
-     ADD DI,2 
-     DEC BL
-     JZ NEXT
-     JMP REPEAT 
-  NEXT:
-     HLT
+  ;NOW JUST COPY STR2 INTO STR1
   
+  LEA SI,STR2
+  LEA DI,STR1
+  XOR AX,AX
+  POP CX
   
-               
+  L3:
+    INC DI
+    LOOP L3  
+    
+  MOV CL,LENGTH2
+  CLD
+  REPE MOVSB
+  HLT             
   LENGTH2 DB 3 
   LENGTH1 DB 4
   POINT DB 1
   STR2 DB 'ROG'
-  STR1 DB 'PGAM'
+  STR1 DB 'PRAM'
+  
   
